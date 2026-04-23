@@ -1,0 +1,32 @@
+import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
+import { JwtStrategy } from './strategies/jwt.strategy';
+import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { Tenant } from '../tenants/tenant.entity';
+import { Settings } from '../settings/settings.entity';
+import { DEFAULT_MESSAGE_TEMPLATE } from '../settings/settings.entity';
+
+@Module({
+  imports: [
+    TypeOrmModule.forFeature([Tenant, Settings]),
+    PassportModule.register({ defaultStrategy: 'jwt' }),
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET'),
+        signOptions: { expiresIn: configService.get<string>('JWT_EXPIRES_IN', '7d') },
+      }),
+    }),
+  ],
+  controllers: [AuthController],
+  providers: [AuthService, JwtStrategy, JwtRefreshStrategy, JwtAuthGuard],
+  exports: [AuthService, JwtAuthGuard, JwtModule],
+})
+export class AuthModule {}
