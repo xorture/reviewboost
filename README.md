@@ -114,7 +114,7 @@ reviewboost/
 git clone <repo>
 cd reviewboost
 cp .env.example .env
-# Editează .env cu credențialele tale
+# editeaza .env
 ```
 
 ### 2. Pornește cu Docker Compose
@@ -329,7 +329,6 @@ docker-compose -f docker-compose.prod.yml up -d
 ```env
 NODE_ENV=production
 DB_SSL=true
-# Schimbă toate secretele!
 ```
 
 ### Mero Webhook URL
@@ -360,4 +359,4 @@ Status:   https://api.reviewboost.ro/api/v1/whatsapp/twilio/status
 
 ## Licență
 
-Proprietar — ReviewBoost SaaS © 2024
+xorture © 2026
